@@ -1,0 +1,45 @@
+{
+  "name": "Study-Project-React-NextJS-KoaJS2",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "next start",
+    "dev": "next",
+    "build": "next build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "commit": "npx git-cz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EricThsi/Study-Project-React-NextJS-KoaJS2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EricThsi/Study-Project-React-NextJS-KoaJS2/issues"
+  },
+  "homepage": "https://github.com/EricThsi/Study-Project-React-NextJS-KoaJS2#readme",
+  "dependencies": {
+    "antd": "^4.1.4",
+    "axios": "^0.19.2",
+    "koa": "^2.11.0",
+    "koa-router": "^8.0.8",
+    "koa-session": "^5.13.1",
+    "next": "^9.3.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^2.1.0",
+    "redux-devtools-extension": "^2.13.8"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
