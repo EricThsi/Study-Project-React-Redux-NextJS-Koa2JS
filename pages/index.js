@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { Button } from 'antd';
+import store from '../store/store';
 import './index.scss';
 
 const Title = styled.h1`
