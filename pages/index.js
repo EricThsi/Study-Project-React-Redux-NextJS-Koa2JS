@@ -10,17 +10,24 @@ const Title = styled.h1`
   font-size: 20px;
 `;
 
-const Index = () => (
+const Index = ({ counter, add }) => (
   <div>
     <Title>NextJS</Title>
-    <Link href='/a'>
-      <Button>Hello world! NextJS</Button>
-    </Link>
+    <Button onClick={() => add(5)}>Hello world! NextJS</Button>
+    <p>Counter: {counter}</p>
   </div>
 );
 
-export default connect(function maoStateToProps(state) {
+function mapStateToProps(state) {
   return {
     counter: state.counter.counter,
   };
-})(Index);
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    add: (counter) => dispatch({ type: 'ADD', payload: { counter } }),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

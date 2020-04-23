@@ -1,5 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 const initialState = {
   counter: 0,
 };
@@ -10,7 +11,7 @@ const counterReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD:
       return {
-        counter: state.counter + 1,
+        counter: state.counter + action.payload.counter,
       };
     default:
       return state;
@@ -26,14 +27,7 @@ const store = createStore(
   {
     counter: initialState,
   },
-  applyMiddleware(ReduxThunk)
+  composeWithDevTools(applyMiddleware(ReduxThunk))
 );
-console.log(store.getState());
-store.dispatch({
-  type: ADD,
-});
-console.log(store.getState());
-
-console.log(store);
 
 export default store;
