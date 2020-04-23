@@ -1,8 +1,8 @@
 import React from 'react';
-import Link from 'next/link';
 import styled from 'styled-components';
 import { Button } from 'antd';
 import { connect } from 'react-redux';
+import { addAsync, add } from '../store';
 import './index.scss';
 
 const Title = styled.h1`
@@ -17,6 +17,12 @@ const Index = ({ counter, add }) => (
     <p>Counter: {counter}</p>
   </div>
 );
+
+Index.getInitialProps = async ({ reduxStore }) => {
+  // await addAsync(10);
+  reduxStore.dispatch(add(10));
+  return {};
+};
 
 function mapStateToProps(state) {
   return {

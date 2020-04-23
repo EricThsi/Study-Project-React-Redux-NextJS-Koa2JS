@@ -22,12 +22,34 @@ const reducers = combineReducers({
   counter: counterReducer,
 });
 
-const store = createStore(
-  reducers,
-  {
-    counter: initialState,
-  },
-  composeWithDevTools(applyMiddleware(ReduxThunk))
-);
+export const add = (counter) => {
+  return {
+    type: ADD,
+    payload: {
+      counter,
+    },
+  };
+};
 
-export default store;
+export const addAsync = (counter) => {
+  return (dispatch) => {
+    setTimeout(() => {
+      dispatch(add(counter));
+    }, 1000);
+  };
+};
+
+export default function initializeStore(state) {
+  const store = createStore(
+    reducers,
+    Object.assign(
+      {},
+      {
+        counter: initialState,
+      },
+      state
+    ),
+    composeWithDevTools(applyMiddleware(ReduxThunk))
+  );
+  return store;
+}
