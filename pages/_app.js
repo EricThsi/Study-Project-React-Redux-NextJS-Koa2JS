@@ -1,5 +1,7 @@
 import App, { Container } from 'next/app';
+import { Provider } from 'react-redux';
 // import 'antd/dist/antd.css';
+import store from '../store';
 
 class MyApp extends App {
   static async getInitialProps(ctx) {
@@ -18,7 +20,9 @@ class MyApp extends App {
 
     return (
       <Container>
-        <Component {...pageProps} />
+        <Provider store={store}>
+          <Component {...pageProps} />
+        </Provider>
       </Container>
     );
   }
