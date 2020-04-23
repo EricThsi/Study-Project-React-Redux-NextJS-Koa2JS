@@ -1,9 +1,13 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const next = require('next');
+const dotenv = require('dotenv');
 
 const env = process.env.NODE_ENV;
 const isDev = env !== 'production';
+
+dotenv.config();
+
 const app = next({
   dev: isDev,
 });
