@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Button } from 'antd';
 import { connect } from 'react-redux';
 import { addAsync, add } from '../store';
+import Layout from '../components/Layout';
 import './index.scss';
 
 const Title = styled.h1`
@@ -11,11 +12,11 @@ const Title = styled.h1`
 `;
 
 const Index = ({ counter, add }) => (
-  <div>
+  <Layout>
     <Title>NextJS</Title>
     <Button onClick={() => add(5)}>Hello world! NextJS</Button>
     <p>Counter: {counter}</p>
-  </div>
+  </Layout>
 );
 
 Index.getInitialProps = async ({ reduxStore }) => {
