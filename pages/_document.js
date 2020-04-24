@@ -30,7 +30,12 @@ class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head />
+        <Head>
+          <link
+            href='https://cdn.bootcss.com/antd/4.1.4/antd.css'
+            rel='stylesheet'
+          ></link>
+        </Head>
 
         <body className='test'>
           <Main />

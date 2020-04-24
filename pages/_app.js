@@ -1,7 +1,8 @@
 import App from 'next/app';
 import { Provider } from 'react-redux';
-// import 'antd/dist/antd.css';
 import NextHoc from '../libs/withRedux';
+
+// import 'antd/dist/antd.css';
 
 class MyApp extends App {
   static async getInitialProps(ctx) {

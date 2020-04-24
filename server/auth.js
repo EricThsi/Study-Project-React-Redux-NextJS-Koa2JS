@@ -7,7 +7,6 @@ const {
   clientSecret: client_secret,
   requestTokenUrl,
 } = config.github;
-console.log(client_id);
 
 module.exports = (server) => {
   server.use(async (ctx, next) => {
