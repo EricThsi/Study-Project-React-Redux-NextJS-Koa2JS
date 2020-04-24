@@ -7,7 +7,6 @@ const initialState = {
 
 const ADD = 'ADD';
 const counterReducer = (state = initialState, action) => {
-  console.log(state, action);
   switch (action.type) {
     case ADD:
       return {
