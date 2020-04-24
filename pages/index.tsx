@@ -12,7 +12,7 @@ import { addAsync, add } from '../store';
 import './index.scss';
 
 const Title = styled.h1`
-  color: red;
+  color: black;
   font-size: 20px;
 `;
 
@@ -24,8 +24,9 @@ const Index = ({ counter, add }) => {
   return (
     <Layout>
       <Title>NextJS</Title>
-      <Button onClick={() => add(5)}>Hello world! NextJS</Button>
-      <p>Counter: {counter}</p>
+      <p>
+        <Button onClick={() => add(5)}>Counter: {counter}</Button>
+      </p>
       <a href={publicRuntimeConfig.OAUTH_URL}>Github Login</a>
     </Layout>
   );

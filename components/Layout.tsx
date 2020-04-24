@@ -1,10 +1,11 @@
-import { Button, Layout, Menu, Breadcrumb, Input, Avatar } from 'antd';
+import React from 'react';
+import { Layout, Input, Avatar } from 'antd';
 import { GithubOutlined, UserOutlined } from '@ant-design/icons';
 import { useState, useCallback } from 'react';
 
 const { Header, Content, Footer } = Layout;
 
-export default (props) => {
+const AppLayout: React.FC = (props) => {
   const [search, setSearch] = useState('');
 
   const handleSearchChange = useCallback(
@@ -81,3 +82,5 @@ export default (props) => {
     </Layout>
   );
 };
+
+export default AppLayout;
