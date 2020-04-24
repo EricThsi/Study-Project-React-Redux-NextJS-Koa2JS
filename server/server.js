@@ -3,6 +3,9 @@ const Router = require('koa-router');
 const next = require('next');
 const dotenv = require('dotenv');
 const session = require('koa-session');
+const Redis = require('ioredis');
+
+const RedisSessionStore = require('./sessionStore');
 
 const env = process.env.NODE_ENV;
 const isDev = env !== 'production';
@@ -12,7 +15,8 @@ dotenv.config();
 const app = next({
   dev: isDev,
 });
-
+// redis client, use default config
+const redis = new Redis();
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
@@ -22,6 +26,7 @@ app.prepare().then(() => {
   server.keys = [process.env.APP_KEY];
   const SESSION_CONFIG = {
     key: 'app:sess',
+    store: new RedisSessionStore(redis),
   };
 
   server.use(session(SESSION_CONFIG, server));
@@ -32,7 +37,7 @@ app.prepare().then(() => {
         name: 'thsi',
       };
     } else {
-      console.log('session is', ctx.session);
+      console.log('session is', ctx.session.user);
     }
 
     await next();
