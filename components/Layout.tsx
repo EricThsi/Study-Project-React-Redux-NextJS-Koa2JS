@@ -1,35 +1,83 @@
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Button, Layout, Menu, Breadcrumb, Input, Avatar } from 'antd';
+import { GithubOutlined, UserOutlined } from '@ant-design/icons';
+import { useState, useCallback } from 'react';
 
 const { Header, Content, Footer } = Layout;
 
-export default (props) => (
-  <Layout>
-    <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
-      <div className='logo' />
-      <Menu theme='dark' mode='horizontal' defaultSelectedKeys={['2']}>
-        <Menu.Item key='1'>nav 1</Menu.Item>
-        <Menu.Item key='2'>nav 2</Menu.Item>
-        <Menu.Item key='3'>nav 3</Menu.Item>
-      </Menu>
-    </Header>
-    <Content
-      className='site-layout'
-      style={{ padding: '0 50px', marginTop: 64 }}
-    >
-      <Breadcrumb style={{ margin: '16px 0' }}>
-        <Breadcrumb.Item>Home</Breadcrumb.Item>
-        <Breadcrumb.Item>List</Breadcrumb.Item>
-        <Breadcrumb.Item>App</Breadcrumb.Item>
-      </Breadcrumb>
-      <div
-        className='site-layout-background'
-        style={{ padding: 24, minHeight: 380 }}
+export default (props) => {
+  const [search, setSearch] = useState('');
+
+  const handleSearchChange = useCallback(
+    (evt) => {
+      setSearch(evt.target.value);
+    },
+    [setSearch]
+  );
+
+  const handleOnSearch = useCallback(() => {}, []);
+
+  return (
+    <Layout>
+      <style jsx>{`
+        .header-inner {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .header-left {
+          display: flex;
+          justify-content: flex-start;
+        }
+      `}</style>
+      <style jsx global>{`
+        #__next {
+          height: 100%;
+        }
+        .ant-layout {
+          height: 100%;
+        }
+      `}</style>
+      <Header>
+        <div className='header-inner'>
+          <div className='header-left'>
+            <div className='logo'>
+              <GithubOutlined
+                style={{
+                  color: 'white',
+                  fontSize: 32,
+                  verticalAlign: 'middle',
+                  marginRight: 20,
+                }}
+              />
+            </div>
+            <div className='header-search'>
+              <Input.Search
+                placeholder='Search'
+                value={search}
+                onChange={handleSearchChange}
+                onSearch={handleOnSearch}
+              />
+            </div>
+          </div>
+          <div className='header-right'>
+            <Avatar icon={<UserOutlined />} />
+          </div>
+        </div>
+      </Header>
+      <Content
+        className='site-layout'
+        style={{ padding: '0 50px', marginTop: 64 }}
       >
-        {props.children}
-      </div>
-    </Content>
-    <Footer style={{ textAlign: 'center' }}>
-      Ant Design ©2018 Created by Ant UED
-    </Footer>
-  </Layout>
-);
+        <div
+          className='site-layout-background'
+          style={{ padding: 24, minHeight: 380 }}
+        >
+          {props.children}
+        </div>
+      </Content>
+      <Footer style={{ textAlign: 'center' }}>
+        NextJS App By <a href='mailto:beefjava@gmail.com'>PlusWhite</a>
+      </Footer>
+    </Layout>
+  );
+};
