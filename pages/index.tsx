@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Button } from 'antd';
 import { connect } from 'react-redux';
-import { addAsync, add } from '../store';
+import axios from 'axios';
+
 import Layout from '../components/Layout';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
+import { addAsync, add } from '../store';
 import './index.scss';
 
 const Title = styled.h1`
@@ -11,13 +16,20 @@ const Title = styled.h1`
   font-size: 20px;
 `;
 
-const Index = ({ counter, add }) => (
-  <Layout>
-    <Title>NextJS</Title>
-    <Button onClick={() => add(5)}>Hello world! NextJS</Button>
-    <p>Counter: {counter}</p>
-  </Layout>
-);
+const Index = ({ counter, add }) => {
+  useEffect(() => {
+    axios.get('/api/user/info').then((res) => console.log(res));
+  }, []);
+
+  return (
+    <Layout>
+      <Title>NextJS</Title>
+      <Button onClick={() => add(5)}>Hello world! NextJS</Button>
+      <p>Counter: {counter}</p>
+      <a href={publicRuntimeConfig.OAUTH_URL}>Github Login</a>
+    </Layout>
+  );
+};
 
 Index.getInitialProps = async ({ reduxStore }) => {
   // await addAsync(10);

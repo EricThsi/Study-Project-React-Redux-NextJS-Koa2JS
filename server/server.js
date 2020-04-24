@@ -5,12 +5,13 @@ const dotenv = require('dotenv');
 const session = require('koa-session');
 const Redis = require('ioredis');
 
+dotenv.config();
+
 const RedisSessionStore = require('./sessionStore');
+const auth = require('./auth');
 
 const env = process.env.NODE_ENV;
 const isDev = env !== 'production';
-
-dotenv.config();
 
 const app = next({
   dev: isDev,
@@ -30,6 +31,7 @@ app.prepare().then(() => {
   };
 
   server.use(session(SESSION_CONFIG, server));
+  auth(server);
 
   server.use(async (ctx, next) => {
     if (!ctx.session.user) {
@@ -37,10 +39,22 @@ app.prepare().then(() => {
         name: 'thsi',
       };
     } else {
-      console.log('session is', ctx.session.user);
+      // console.log('session is', ctx.session.user);
     }
 
     await next();
+  });
+
+  router.get('/api/user/info', async (ctx, next) => {
+    const user = ctx.session.userInfo;
+
+    if (!user) {
+      ctx.status = 401;
+      ctx.body = '401, Need Login';
+    } else {
+      ctx.body = user;
+      ctx.set('Content-Type', 'application/json');
+    }
   });
 
   server.use(async (ctx, next) => {
@@ -52,6 +66,6 @@ app.prepare().then(() => {
   server.use(router.routes());
 
   server.listen(3000, () => {
-    console.log('Koa server is running on port 3000');
+    console.log('Server is running on port 3000');
   });
 });
