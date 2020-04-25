@@ -3,6 +3,9 @@ import { Layout, Input, Avatar } from 'antd';
 import { GithubOutlined, UserOutlined } from '@ant-design/icons';
 import { useState, useCallback } from 'react';
 
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
 const { Header, Content, Footer } = Layout;
 
 const AppLayout: React.FC = (props) => {
@@ -61,7 +64,9 @@ const AppLayout: React.FC = (props) => {
             </div>
           </div>
           <div className='header-right'>
-            <Avatar icon={<UserOutlined />} />
+            <a href={publicRuntimeConfig.OAUTH_URL} title='Github Login'>
+              <Avatar icon={<UserOutlined />} />
+            </a>
           </div>
         </div>
       </Header>
