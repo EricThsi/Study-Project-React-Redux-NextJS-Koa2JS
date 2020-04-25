@@ -1,14 +1,24 @@
-import React from 'react';
-import { Layout, Input, Avatar } from 'antd';
+import React, { useState, useCallback } from 'react';
+import { connect } from 'react-redux';
+import { Layout, Input, Avatar, Tooltip, Dropdown, Menu } from 'antd';
 import { GithubOutlined, UserOutlined } from '@ant-design/icons';
-import { useState, useCallback } from 'react';
 
 import getConfig from 'next/config';
 
 const { publicRuntimeConfig } = getConfig();
 const { Header, Content, Footer } = Layout;
 
-const AppLayout: React.FC = (props) => {
+interface User {
+  id?: number;
+  avatar_url?: string;
+}
+
+interface LayoutProps {
+  user?: User;
+}
+
+const AppLayout: React.FC<LayoutProps> = (props) => {
+  const { user } = props;
   const [search, setSearch] = useState('');
 
   const handleSearchChange = useCallback(
@@ -19,6 +29,14 @@ const AppLayout: React.FC = (props) => {
   );
 
   const handleOnSearch = useCallback(() => {}, []);
+
+  const userDropdown = (
+    <Menu>
+      <Menu.Item>
+        <a href='javascript:void(0);'>Logout</a>
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <Layout>
@@ -64,9 +82,19 @@ const AppLayout: React.FC = (props) => {
             </div>
           </div>
           <div className='header-right'>
-            <a href={publicRuntimeConfig.OAUTH_URL} title='Github Login'>
-              <Avatar icon={<UserOutlined />} />
-            </a>
+            {user && user.id ? (
+              <Dropdown overlay={userDropdown}>
+                <a href='/'>
+                  <Avatar src={user.avatar_url} />
+                </a>
+              </Dropdown>
+            ) : (
+              <Tooltip title='Click to login'>
+                <a href={publicRuntimeConfig.OAUTH_URL} title='Github Login'>
+                  <Avatar icon={<UserOutlined />} />
+                </a>
+              </Tooltip>
+            )}
           </div>
         </div>
       </Header>
@@ -88,4 +116,10 @@ const AppLayout: React.FC = (props) => {
   );
 };
 
-export default AppLayout;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(AppLayout);
