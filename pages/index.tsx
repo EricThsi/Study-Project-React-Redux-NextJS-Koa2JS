@@ -4,12 +4,14 @@ import { Button } from 'antd';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import Layout from '../components/Layout';
 import getConfig from 'next/config';
+import Link from 'next/link';
+import Layout from '../components/Layout';
 
 const { publicRuntimeConfig } = getConfig();
 import { addAsync, add } from '../store';
 import './index.scss';
+import Detail from './detail';
 
 const Title = styled.h1`
   color: black;
@@ -24,6 +26,9 @@ const Index = ({ counter, add }) => {
   return (
     <Layout>
       <Title>NextJS</Title>
+      <Link href='/detail'>
+        <a>Detail</a>
+      </Link>
       <p>
         <Button onClick={() => add(5)}>Counter: {counter}</Button>
       </p>

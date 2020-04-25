@@ -40,9 +40,7 @@ const AppLayout: React.FC<LayoutProps> = (props) => {
   const userDropdown = (
     <Menu>
       <Menu.Item>
-        <a href='javascript:void(0);' onClick={handleLogout}>
-          Logout
-        </a>
+        <a onClick={(evt) => handleLogout(evt)}>Logout</a>
       </Menu.Item>
     </Menu>
   );
