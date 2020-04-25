@@ -16,9 +16,17 @@ const counterReducer = (state = initialState, action) => {
       return state;
   }
 };
+const userInitialState = {};
+const userReducer = (state = userInitialState, action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
 
 const reducers = combineReducers({
   counter: counterReducer,
+  user: userReducer,
 });
 
 export const add = (counter) => {
@@ -45,6 +53,7 @@ export default function initializeStore(state) {
       {},
       {
         counter: initialState,
+        user: userInitialState,
       },
       state
     ),

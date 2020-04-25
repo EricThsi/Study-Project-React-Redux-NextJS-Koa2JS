@@ -42,8 +42,22 @@ export default (Comp) => {
   }
 
   WithReduxApp.getInitialProps = async (ctx) => {
+    let reduxStore;
     let appProps = {};
-    const reduxStore = getOrCreateStore();
+
+    if (isServer) {
+      const { req } = ctx.ctx;
+      const session = req.session;
+      if (session && session.userInfo) {
+        reduxStore = getOrCreateStore({
+          user: session.userInfo,
+        });
+      } else {
+        reduxStore = getOrCreateStore();
+      }
+    } else {
+      reduxStore = getOrCreateStore();
+    }
 
     ctx.reduxStore = reduxStore;
 

@@ -33,18 +33,6 @@ app.prepare().then(() => {
   server.use(session(SESSION_CONFIG, server));
   auth(server);
 
-  server.use(async (ctx, next) => {
-    if (!ctx.session.user) {
-      ctx.session.user = {
-        name: 'thsi',
-      };
-    } else {
-      // console.log('session is', ctx.session.user);
-    }
-
-    await next();
-  });
-
   router.get('/api/user/info', async (ctx, next) => {
     const user = ctx.session.userInfo;
 
@@ -57,13 +45,18 @@ app.prepare().then(() => {
     }
   });
 
+  server.use(router.routes());
+
   server.use(async (ctx, next) => {
+    ctx.req.session = ctx.session;
     await handle(ctx.req, ctx.res);
     ctx.respond = false;
-    await next();
   });
 
-  server.use(router.routes());
+  server.use(async (ctx, next) => {
+    ctx.res.statusCode = 200;
+    await next();
+  });
 
   server.listen(3000, () => {
     console.log('Server is running on port 3000');
