@@ -1,5 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
+import axios from 'axios';
 import { composeWithDevTools } from 'redux-devtools-extension';
 const initialState = {
   counter: 0,
@@ -17,8 +18,14 @@ const counterReducer = (state = initialState, action) => {
   }
 };
 const userInitialState = {};
+
+const LOGOUT = 'LOGOUT';
+
 const userReducer = (state = userInitialState, action) => {
   switch (action.type) {
+    case LOGOUT: {
+      return {};
+    }
     default:
       return state;
   }
@@ -43,6 +50,25 @@ export const addAsync = (counter) => {
     setTimeout(() => {
       dispatch(add(counter));
     }, 1000);
+  };
+};
+
+export const logout = () => {
+  return (dispatch) => {
+    axios
+      .post('/logout')
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch({
+            type: LOGOUT,
+          });
+        } else {
+          console.log('Logout failed'.res);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 };
 

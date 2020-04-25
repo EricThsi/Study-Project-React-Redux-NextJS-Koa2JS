@@ -1,9 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
 import { Layout, Input, Avatar, Tooltip, Dropdown, Menu } from 'antd';
 import { GithubOutlined, UserOutlined } from '@ant-design/icons';
-
 import getConfig from 'next/config';
+
+import { logout } from '../store';
 
 const { publicRuntimeConfig } = getConfig();
 const { Header, Content, Footer } = Layout;
@@ -15,10 +17,11 @@ interface User {
 
 interface LayoutProps {
   user?: User;
+  logout: () => void;
 }
 
 const AppLayout: React.FC<LayoutProps> = (props) => {
-  const { user } = props;
+  const { user, logout } = props;
   const [search, setSearch] = useState('');
 
   const handleSearchChange = useCallback(
@@ -29,11 +32,17 @@ const AppLayout: React.FC<LayoutProps> = (props) => {
   );
 
   const handleOnSearch = useCallback(() => {}, []);
+  const handleLogout = useCallback((evt) => {
+    evt.preventDefault();
+    logout();
+  }, []);
 
   const userDropdown = (
     <Menu>
       <Menu.Item>
-        <a href='javascript:void(0);'>Logout</a>
+        <a href='javascript:void(0);' onClick={handleLogout}>
+          Logout
+        </a>
       </Menu.Item>
     </Menu>
   );
@@ -122,4 +131,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(AppLayout);
+const mapReducer = (dispatch) => {
+  return {
+    logout: () => dispatch(logout()),
+  };
+};
+
+export default connect(mapStateToProps, mapReducer)(AppLayout);
