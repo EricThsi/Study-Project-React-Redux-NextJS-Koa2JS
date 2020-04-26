@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Layout, Input, Avatar, Tooltip, Dropdown, Menu } from 'antd';
 import { GithubOutlined, UserOutlined } from '@ant-design/icons';
 import getConfig from 'next/config';
+import Link from 'next/link';
 
 import { logout } from '../store';
 
@@ -17,6 +18,10 @@ interface User {
 
 interface Router {
   asPath: string;
+  push: (str) => void;
+  query: {
+    q: string;
+  };
 }
 
 interface LayoutProps {
@@ -27,7 +32,8 @@ interface LayoutProps {
 
 const AppLayout: React.FC<LayoutProps> = (props) => {
   const { user, logout, router } = props;
-  const [search, setSearch] = useState('');
+  const urlQuery = router.query && router.query.q;
+  const [search, setSearch] = useState(urlQuery || '');
   // console.log(router);
 
   const handleSearchChange = useCallback(
@@ -37,7 +43,10 @@ const AppLayout: React.FC<LayoutProps> = (props) => {
     [setSearch]
   );
 
-  const handleOnSearch = useCallback(() => {}, []);
+  const handleOnSearch = useCallback(() => {
+    router.push(`/search?q=${search}`);
+  }, [search]);
+
   const handleLogout = useCallback((evt) => {
     evt.preventDefault();
     logout();
@@ -86,21 +95,23 @@ const AppLayout: React.FC<LayoutProps> = (props) => {
           height: 100%;
         }
         .ant-layout {
-          height: 100%;
+          min-height: 100%;
         }
       `}</style>
       <Header>
         <div className='header-inner'>
           <div className='header-left'>
             <div className='logo'>
-              <GithubOutlined
-                style={{
-                  color: 'white',
-                  fontSize: 32,
-                  verticalAlign: 'middle',
-                  marginRight: 20,
-                }}
-              />
+              <Link href='/'>
+                <GithubOutlined
+                  style={{
+                    color: 'white',
+                    fontSize: 32,
+                    verticalAlign: 'middle',
+                    marginRight: 20,
+                  }}
+                />
+              </Link>
             </div>
             <div className='header-search'>
               <Input.Search

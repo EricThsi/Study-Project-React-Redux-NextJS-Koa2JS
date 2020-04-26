@@ -9,7 +9,6 @@ import Link from 'next/link';
 
 const { publicRuntimeConfig } = getConfig();
 import { addAsync, add } from '../store';
-import './index.scss';
 import Detail from './detail';
 
 const Title = styled.h1`

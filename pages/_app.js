@@ -8,6 +8,8 @@ import Loading from '../components/Loading';
 
 // import 'antd/dist/antd.css';
 
+import './index.scss';
+
 class MyApp extends App {
   state = {
     loading: false,
