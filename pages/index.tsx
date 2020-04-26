@@ -9,6 +9,7 @@ import Link from 'next/link';
 
 const { publicRuntimeConfig } = getConfig();
 import { addAsync, add } from '../store';
+const api = require('../libs/api');
 import Detail from './detail';
 
 const Title = styled.h1`
@@ -43,10 +44,23 @@ const Index = ({ counter, add }) => {
   );
 };
 
-Index.getInitialProps = async ({ reduxStore }) => {
+Index.getInitialProps = async ({ ctx, reduxStore }) => {
   // await addAsync(10);
   reduxStore.dispatch(add(10));
-  return {};
+  const result = await api
+    .request(
+      {
+        url: '/search/repositories?q=react',
+      },
+      ctx.req,
+      ctx.res
+    )
+    // .then((res) => console.log(res))
+    .catch((err) => console.error(err));
+
+  return {
+    data: result.data,
+  };
 };
 
 function mapStateToProps(state) {
