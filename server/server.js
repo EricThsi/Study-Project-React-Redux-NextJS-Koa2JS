@@ -1,5 +1,6 @@
 const Koa = require('koa');
 const Router = require('koa-router');
+const koaBody = require('koa-body');
 const next = require('next');
 const dotenv = require('dotenv');
 const session = require('koa-session');
@@ -32,6 +33,7 @@ app.prepare().then(() => {
   };
 
   server.use(session(SESSION_CONFIG, server));
+  server.use(koaBody());
   auth(server);
   api(server);
 

@@ -16,7 +16,7 @@ module.exports = (server) => {
       const result = await requestGithub(
         method,
         ctx.url.replace('/github', '/'),
-        {},
+        ctx.request.body || {},
         headers
       );
       ctx.status = result.status;
