@@ -15,14 +15,20 @@ interface User {
   avatar_url?: string;
 }
 
+interface Router {
+  asPath: string;
+}
+
 interface LayoutProps {
   user?: User;
   logout: () => void;
+  router: Router;
 }
 
 const AppLayout: React.FC<LayoutProps> = (props) => {
-  const { user, logout } = props;
+  const { user, logout, router } = props;
   const [search, setSearch] = useState('');
+  // console.log(router);
 
   const handleSearchChange = useCallback(
     (evt) => {
@@ -35,6 +41,23 @@ const AppLayout: React.FC<LayoutProps> = (props) => {
   const handleLogout = useCallback((evt) => {
     evt.preventDefault();
     logout();
+  }, []);
+
+  const handleGotoOAuth = useCallback((evt) => {
+    evt.preventDefault();
+
+    axios
+      .get(`/prepare-auth?url=${router.asPath}`)
+      .then((res) => {
+        if (res.status === 200) {
+          location.href = publicRuntimeConfig.OAUTH_URL;
+        } else {
+          console.error('prepare auth failed', res);
+        }
+      })
+      .catch((err) => {
+        console.error('prepare auth filed', err);
+      });
   }, []);
 
   const userDropdown = (
@@ -97,7 +120,11 @@ const AppLayout: React.FC<LayoutProps> = (props) => {
               </Dropdown>
             ) : (
               <Tooltip title='Click to login'>
-                <a href={publicRuntimeConfig.OAUTH_URL} title='Github Login'>
+                <a
+                  href={publicRuntimeConfig.OAUTH_URL}
+                  title='Github Login'
+                  onClick={handleGotoOAuth}
+                >
                   <Avatar icon={<UserOutlined />} />
                 </a>
               </Tooltip>

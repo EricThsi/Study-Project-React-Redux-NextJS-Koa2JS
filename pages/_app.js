@@ -2,6 +2,8 @@ import App from 'next/app';
 import { Provider } from 'react-redux';
 import NextHoc from '../libs/withRedux';
 
+import Layout from '../components/Layout';
+
 // import 'antd/dist/antd.css';
 
 class MyApp extends App {
@@ -17,11 +19,13 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps, reduxStore } = this.props;
+    const { Component, pageProps, reduxStore, router } = this.props;
 
     return (
       <Provider store={reduxStore}>
-        <Component {...pageProps} />
+        <Layout router={router}>
+          <Component {...pageProps} />
+        </Layout>
       </Provider>
     );
   }

@@ -6,7 +6,6 @@ import axios from 'axios';
 
 import getConfig from 'next/config';
 import Link from 'next/link';
-import Layout from '../components/Layout';
 
 const { publicRuntimeConfig } = getConfig();
 import { addAsync, add } from '../store';
@@ -24,16 +23,24 @@ const Index = ({ counter, add }) => {
   }, []);
 
   return (
-    <Layout>
+    <div>
       <Title>NextJS</Title>
-      <Link href='/detail'>
+      <Link
+        href={{
+          pathname: '/detail',
+          query: {
+            name: 'user',
+          },
+        }}
+        passHref
+      >
         <a>Detail</a>
       </Link>
       <p>
         <Button onClick={() => add(5)}>Counter: {counter}</Button>
       </p>
       <a href={publicRuntimeConfig.OAUTH_URL}>Github Login</a>
-    </Layout>
+    </div>
   );
 };
 

@@ -44,7 +44,8 @@ module.exports = (server) => {
         });
 
         ctx.session.userInfo = userInfoRep.data;
-        ctx.redirect('/');
+        ctx.redirect((ctx.session && ctx.session.urlBeforeOAuth) || '/');
+        ctx.session.urlBeforeOAuth = '';
       } else {
         const errorMsg = result.data && result.data.error;
         ctx.body = `request token failed, ${errorMsg}`;
@@ -60,6 +61,18 @@ module.exports = (server) => {
     if (path === '/logout' && method === 'POST') {
       ctx.session = null;
       ctx.body = 'Logout successfully.';
+    } else {
+      await next();
+    }
+  });
+
+  server.use(async (ctx, next) => {
+    const { path, method, query } = ctx;
+
+    if (path === '/prepare-auth' && method === 'GET') {
+      const { url } = query;
+      ctx.session.urlBeforeOAuth = url;
+      ctx.body = 'Okay';
     } else {
       await next();
     }
