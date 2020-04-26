@@ -1,5 +1,15 @@
 import React from 'react';
 
-const Detail: React.FC = () => <div>Detail</div>;
+interface IDetailProps {}
+
+const Detail = () => <div>Detail</div>;
+
+Detail.getInitialProps = async () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 3000);
+  });
+};
 
 export default Detail;
