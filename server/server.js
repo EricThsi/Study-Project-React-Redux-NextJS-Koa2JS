@@ -9,8 +9,7 @@ const Redis = require('ioredis');
 dotenv.config();
 
 const RedisSessionStore = require('./sessionStore');
-const auth = require('./auth');
-const api = require('./api');
+const routing = require('./routes');
 
 const env = process.env.NODE_ENV;
 const isDev = env !== 'production';
@@ -34,8 +33,7 @@ app.prepare().then(() => {
 
   server.use(session(SESSION_CONFIG, server));
   server.use(koaBody());
-  auth(server);
-  api(server);
+  routing(server);
 
   router.get('/api/user/info', async (ctx, next) => {
     const user = ctx.session.userInfo;
