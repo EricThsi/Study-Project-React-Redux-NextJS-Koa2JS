@@ -25,7 +25,7 @@ const request = async ({ method = 'GET', url, data = {} }, req, res) => {
     if (githubAuth.access_token) {
       headers[
         'Authorization'
-      ] = `${githubAuth.token} ${githubAuth.access_token}`;
+      ] = `${githubAuth.token_type} ${githubAuth.access_token}`;
     }
 
     return await requestGithub(method, url, data, headers);

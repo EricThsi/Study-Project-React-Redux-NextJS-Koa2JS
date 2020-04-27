@@ -8,7 +8,6 @@ import getConfig from 'next/config';
 import Link from 'next/link';
 
 const { publicRuntimeConfig } = getConfig();
-import { addAsync, add } from '../store';
 const api = require('../libs/api');
 import Detail from './detail';
 
@@ -17,10 +16,13 @@ const Title = styled.h1`
   font-size: 20px;
 `;
 
-const Index = ({ counter, add }) => {
-  useEffect(() => {
-    axios.get('/api/user/info').then((res) => console.log(res));
-  }, []);
+const Index = ({ isLogin, userRepos, userStarring }) => {
+  console.log(userRepos);
+  console.log(userStarring);
+  console.log(isLogin);
+  // useEffect(() => {
+  //   axios.get('/api/user/info').then((res) => console.log(res));
+  // }, []);
 
   return (
     <div>
@@ -36,30 +38,47 @@ const Index = ({ counter, add }) => {
       >
         <a>Detail</a>
       </Link>
-      <p>
-        <Button onClick={() => add(5)}>Counter: {counter}</Button>
-      </p>
       <a href={publicRuntimeConfig.OAUTH_URL}>Github Login</a>
     </div>
   );
 };
 
 Index.getInitialProps = async ({ ctx, reduxStore }) => {
-  // await addAsync(10);
-  reduxStore.dispatch(add(10));
-  const result = await api
+  // reduxStore.dispatch(add(10));
+  const { user } = reduxStore.getState();
+  if (!user || !user.id) {
+    return {
+      isLogin: false,
+    };
+  }
+
+  const { req, res } = ctx;
+  const userRepos = await api
     .request(
       {
-        url: '/search/repositories?q=react',
+        url: '/user/repos',
+        // url: '/search/repositories?q=react',
       },
-      ctx.req,
-      ctx.res
+      req,
+      res
     )
     // .then((res) => console.log(res))
     .catch((err) => console.error(err));
 
+  const userStarring = await api
+    .request(
+      {
+        url: '/user/starred',
+      },
+      req,
+      res
+    )
+    .catch((err) => console.error(err));
+
   return {
-    data: result.data,
+    isLogin: true,
+    userRepos: userRepos.data,
+    userStarring: userStarring.data,
   };
 };
 
