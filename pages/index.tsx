@@ -38,7 +38,9 @@ const Index = ({ isLogin, userRepos, userStarring }) => {
       >
         <a>Detail</a>
       </Link>
-      <a href={publicRuntimeConfig.OAUTH_URL}>Github Login</a>
+      <p>
+        <a href={publicRuntimeConfig.OAUTH_URL}>Github Login</a>
+      </p>
     </div>
   );
 };
@@ -84,7 +86,7 @@ Index.getInitialProps = async ({ ctx, reduxStore }) => {
 
 function mapStateToProps(state) {
   return {
-    counter: state.counter.counter,
+    // counter: state.counter.counter,
   };
 }
 
