@@ -8,7 +8,7 @@ import getConfig from 'next/config';
 import Link from 'next/link';
 
 const { publicRuntimeConfig } = getConfig();
-const api = require('../libs/api');
+const api = require('../libs/request');
 import Repo from '../components/Repo';
 import Detail from './detail';
 

@@ -1,26 +1,10 @@
 const Router = require('koa-router');
 
 const router = new Router();
-const { requestGithub } = require('../../libs/api');
+const apiCtl = require('../controllers/api');
 
-router.get('/github', async (ctx, next) => {
-  const { session } = ctx;
-  const githubAuth = session && session.githubAuth;
-  const token = githubAuth && githubAuth.access_token;
-  let headers = {};
+const { handleGithubApi } = apiCtl;
 
-  if (token) {
-    headers['Authorization'] = `${githubAuth.token_type} ${token}`;
-  }
-
-  const result = await requestGithub(
-    method,
-    ctx.url.replace('/github/', '/'),
-    ctx.request.body || {},
-    headers
-  );
-  ctx.status = result.status;
-  ctx.body = result.data;
-});
+router.get('/github', handleGithubApi);
 
 module.exports = router;
