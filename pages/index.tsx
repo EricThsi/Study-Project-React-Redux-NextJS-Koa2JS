@@ -122,8 +122,8 @@ Index.getInitialProps = async ({ ctx, reduxStore }) => {
     .catch((err) => console.error(err));
 
   return {
-    userRepos: userRepos.data,
-    userStarring: userStarring.data,
+    userRepos: userRepos && userRepos.data,
+    userStarring: userStarring && userStarring.data,
   };
 };
 
