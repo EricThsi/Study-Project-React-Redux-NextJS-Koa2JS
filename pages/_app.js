@@ -8,7 +8,7 @@ import Loading from '../components/Loading';
 
 // import 'antd/dist/antd.css';
 
-import './index.scss';
+import './app.scss';
 
 class MyApp extends App {
   state = {
