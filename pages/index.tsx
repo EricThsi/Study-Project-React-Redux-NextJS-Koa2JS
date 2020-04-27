@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import { Button } from 'antd';
 import { MailOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
-import axios from 'axios';
 
 import getConfig from 'next/config';
 import Link from 'next/link';
 
 const { publicRuntimeConfig } = getConfig();
 const api = require('../libs/api');
+import Repo from '../components/Repo';
 import Detail from './detail';
 
 const Title = styled.h1`
@@ -18,9 +18,8 @@ const Title = styled.h1`
 `;
 
 const Index = ({ user, isLogin, userRepos, userStarring }) => {
-  console.log(userRepos);
-  console.log(userStarring);
-  console.log(isLogin);
+  // console.log(userRepos);
+  // console.log(userStarring);
 
   if (!isLogin) {
     return (
@@ -71,6 +70,9 @@ const Index = ({ user, isLogin, userRepos, userStarring }) => {
         </p>
       </div>
       <div className='user-repos'>
+        {userRepos.map((repo) => (
+          <Repo repo={repo} key={repo.id} />
+        ))}
         <Link
           href={{
             pathname: '/detail',

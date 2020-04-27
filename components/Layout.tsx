@@ -125,9 +125,7 @@ const AppLayout: React.FC<LayoutProps> = (props) => {
           <div className='header-right'>
             {user && user.id ? (
               <Dropdown overlay={userDropdown}>
-                <a href='/'>
-                  <Avatar src={user.avatar_url} />
-                </a>
+                <Avatar src={user.avatar_url} />
               </Dropdown>
             ) : (
               <Tooltip title='Click to login'>

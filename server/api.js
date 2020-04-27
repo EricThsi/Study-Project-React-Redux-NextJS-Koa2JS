@@ -12,7 +12,7 @@ module.exports = (server) => {
       if (token) {
         headers['Authorization'] = `${githubAuth.token_type} ${token}`;
       }
-      console.log(ctx.url.replace('/github/', '/'));
+
       const result = await requestGithub(
         method,
         ctx.url.replace('/github/', '/'),
