@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { Button } from 'antd';
+import { Button, Tabs } from 'antd';
 import { MailOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
+import Link from 'next/link';
+import Router from 'next/router';
 
 import getConfig from 'next/config';
-import Link from 'next/link';
 
 const { publicRuntimeConfig } = getConfig();
 const api = require('../libs/request');
@@ -17,9 +18,18 @@ const Title = styled.h1`
   font-size: 20px;
 `;
 
-const Index = ({ user, isLogin, userRepos, userStarring }) => {
-  // console.log(userRepos);
-  // console.log(userStarring);
+const Index = ({
+  router,
+  user,
+  isLogin,
+  userRepos = [],
+  userStarring = [],
+}) => {
+  const { key: tabKey = '1' } = router.query;
+
+  const handleTabChange = (activeKey) => {
+    Router.push(`/?key=${activeKey}`);
+  };
 
   if (!isLogin) {
     return (
@@ -70,9 +80,22 @@ const Index = ({ user, isLogin, userRepos, userStarring }) => {
         </p>
       </div>
       <div className='user-repos'>
-        {userRepos.map((repo) => (
-          <Repo repo={repo} key={repo.id} />
-        ))}
+        <Tabs
+          defaultActiveKey={tabKey}
+          animated={false}
+          onChange={handleTabChange}
+        >
+          <Tabs.TabPane tab='Your Repo' key='1'>
+            {userRepos.map((repo) => (
+              <Repo repo={repo} key={repo.id} />
+            ))}
+          </Tabs.TabPane>
+          <Tabs.TabPane tab='Your Starred Repo' key='2'>
+            {userStarring.map((repo) => (
+              <Repo repo={repo} key={repo.id} />
+            ))}
+          </Tabs.TabPane>
+        </Tabs>
         <Link
           href={{
             pathname: '/detail',
@@ -94,8 +117,8 @@ Index.getInitialProps = async ({ ctx, reduxStore }) => {
   const { user } = reduxStore.getState();
   if (!(user && user.id)) {
     return {
-      userRepos: {},
-      userStarring: {},
+      userRepos: [],
+      userStarring: [],
     };
   }
 

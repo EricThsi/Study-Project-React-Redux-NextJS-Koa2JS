@@ -57,7 +57,7 @@ class MyApp extends App {
       <Provider store={reduxStore}>
         {this.state.loading && <Loading />}
         <Layout router={router}>
-          <Component {...pageProps} />
+          <Component {...pageProps} router={router} />
         </Layout>
       </Provider>
     );
