@@ -129,7 +129,6 @@ Index.getInitialProps = async ({ ctx, reduxStore }) => {
   if (!(user && user.id)) {
     return {
       userRepos: [],
-
       userStarredRepos: [],
     };
   }
@@ -166,7 +165,7 @@ Index.getInitialProps = async ({ ctx, reduxStore }) => {
 
   return {
     userRepos: userRepos && userRepos.data,
-    userStarring: userStarredRepos && userStarredRepos.data,
+    userStarredRepos: userStarredRepos && userStarredRepos.data,
   };
 };
 
