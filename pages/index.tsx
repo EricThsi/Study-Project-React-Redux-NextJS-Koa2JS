@@ -5,22 +5,23 @@ import { MailOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import Link from 'next/link';
 import Router from 'next/router';
+import LRU from 'lru-cache';
 
 import getConfig from 'next/config';
-
-const { publicRuntimeConfig } = getConfig();
-const api = require('../libs/request');
 import Repo from '../components/Repo';
 import Detail from './detail';
+
+const api = require('../libs/request');
+const { publicRuntimeConfig } = getConfig();
+const cache = new LRU({
+  maxAge: 1000 * 60 * 10,
+});
+const isServer = typeof window === 'undefined';
 
 const Title = styled.h1`
   color: black;
   font-size: 20px;
 `;
-
-const isServer = typeof window === 'undefined';
-let cachedUserRepos;
-let cachedUserStarredRepos;
 
 const Index = ({
   router,
@@ -37,10 +38,15 @@ const Index = ({
 
   useEffect(() => {
     if (!isServer) {
-      cachedUserRepos = userRepos;
-      cachedUserStarredRepos = userStarredRepos;
+      if (userRepos) {
+        cache.set('userRepos', userRepos);
+      }
+
+      if (userStarredRepos) {
+        cache.set('userStarredRepos', userStarredRepos);
+      }
     }
-  }, []);
+  }, [userRepos, userStarredRepos]);
 
   if (!isLogin) {
     return (
@@ -133,10 +139,10 @@ Index.getInitialProps = async ({ ctx, reduxStore }) => {
     };
   }
   if (!isServer) {
-    if (cachedUserRepos && cachedUserStarredRepos) {
+    if (cache.get('userRepos') && cache.get('cachedUserStarredRepos')) {
       return {
-        userRepos: cachedUserRepos,
-        userStarredRepos: cachedUserStarredRepos,
+        userRepos: cache.get('userRepos'),
+        userStarredRepos: cache.get('cachedUserStarredRepos'),
       };
     }
   }
