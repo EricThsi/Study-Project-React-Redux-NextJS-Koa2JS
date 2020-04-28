@@ -3,6 +3,7 @@ const { requestGithub } = require('../../libs/request');
 class APIController {
   async handleGithubApi(ctx, next) {
     const { session } = ctx;
+    const { method } = ctx.request;
     const githubAuth = session && session.githubAuth;
     const token = githubAuth && githubAuth.access_token;
     let headers = {};

@@ -18,12 +18,15 @@ const Title = styled.h1`
   font-size: 20px;
 `;
 
+let cachedUserRepos;
+let cachedUserStarredRepos;
+
 const Index = ({
   router,
   user,
   isLogin,
   userRepos = [],
-  userStarring = [],
+  userStarredRepos = [],
 }) => {
   const { key: tabKey = '1' } = router.query;
 
@@ -91,7 +94,7 @@ const Index = ({
             ))}
           </Tabs.TabPane>
           <Tabs.TabPane tab='Your Starred Repo' key='2'>
-            {userStarring.map((repo) => (
+            {userStarredRepos.map((repo) => (
               <Repo repo={repo} key={repo.id} />
             ))}
           </Tabs.TabPane>
@@ -112,14 +115,25 @@ const Index = ({
   );
 };
 
+const isServer = typeof window === 'undefined';
+
 Index.getInitialProps = async ({ ctx, reduxStore }) => {
   // reduxStore.dispatch(add(10));
   const { user } = reduxStore.getState();
   if (!(user && user.id)) {
     return {
       userRepos: [],
-      userStarring: [],
+
+      userStarredRepos: [],
     };
+  }
+  if (!isServer) {
+    if (cachedUserRepos && cachedUserStarredRepos) {
+      return {
+        userRepos: cachedUserRepos,
+        userStarredRepos: cachedUserStarredRepos,
+      };
+    }
   }
 
   const { req, res } = ctx;
@@ -134,7 +148,7 @@ Index.getInitialProps = async ({ ctx, reduxStore }) => {
     )
     .catch((err) => console.error(err));
 
-  const userStarring = await api
+  const userStarredRepos = await api
     .request(
       {
         url: '/user/starred',
@@ -144,9 +158,14 @@ Index.getInitialProps = async ({ ctx, reduxStore }) => {
     )
     .catch((err) => console.error(err));
 
+  if (!isServer) {
+    cachedUserRepos = userRepos && userRepos.data;
+    cachedUserStarredRepos = userStarredRepos && userStarredRepos.data;
+  }
+
   return {
     userRepos: userRepos && userRepos.data,
-    userStarring: userStarring && userStarring.data,
+    userStarring: userStarredRepos && userStarredRepos.data,
   };
 };
 
