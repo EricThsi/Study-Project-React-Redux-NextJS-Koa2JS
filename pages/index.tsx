@@ -18,6 +18,7 @@ const Title = styled.h1`
   font-size: 20px;
 `;
 
+const isServer = typeof window === 'undefined';
 let cachedUserRepos;
 let cachedUserStarredRepos;
 
@@ -33,6 +34,13 @@ const Index = ({
   const handleTabChange = (activeKey) => {
     Router.push(`/?key=${activeKey}`);
   };
+
+  useEffect(() => {
+    if (!isServer) {
+      cachedUserRepos = userRepos;
+      cachedUserStarredRepos = userStarredRepos;
+    }
+  }, []);
 
   if (!isLogin) {
     return (
@@ -115,8 +123,6 @@ const Index = ({
   );
 };
 
-const isServer = typeof window === 'undefined';
-
 Index.getInitialProps = async ({ ctx, reduxStore }) => {
   // reduxStore.dispatch(add(10));
   const { user } = reduxStore.getState();
@@ -157,11 +163,6 @@ Index.getInitialProps = async ({ ctx, reduxStore }) => {
       res
     )
     .catch((err) => console.error(err));
-
-  if (!isServer) {
-    cachedUserRepos = userRepos && userRepos.data;
-    cachedUserStarredRepos = userStarredRepos && userStarredRepos.data;
-  }
 
   return {
     userRepos: userRepos && userRepos.data,
