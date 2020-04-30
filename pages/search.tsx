@@ -37,26 +37,27 @@ const selectedItemStyle = {
   fontWeight: 100,
 };
 
-const handleSearch = (config) => {
-  Router.push({
-    pathname: '/search',
-    query: config,
-  });
-};
-
 const FilterLink = ({ name, q, lang, sort, order }) => {
-  const handleSearch = (config) => {
-    Router.push({
-      pathname: '/search',
-      query: {
-        q,
-        lang,
-        sort,
-        order,
-      },
-    });
-  };
-  return <a onClick={handleSearch}>{name}</a>;
+  let queryString = `?q=${q}`;
+
+  if (lang) {
+    queryString += `+language:${lang}`;
+  }
+
+  if (sort) {
+    queryString += `&sort=${sort}&order=${order || 'desc'}`;
+  }
+
+  // if (page) {
+  //   queryString += `&page=${page}`;
+  // }
+  console.log(queryString);
+
+  return (
+    <Link href={`/search${queryString}`}>
+      <a>{name}</a>
+    </Link>
+  );
 };
 
 const Search = ({ router, repos }) => {
@@ -79,7 +80,11 @@ const Search = ({ router, repos }) => {
                   key={index}
                   style={selected ? selectedItemStyle : null}
                 >
-                  <FilterLink {...queryParams} lang={item} name={item} />
+                  {selected ? (
+                    <span>{item}</span>
+                  ) : (
+                    <FilterLink {...queryParams} lang={item} name={item} />
+                  )}
                 </List.Item>
               );
             }}
@@ -102,12 +107,16 @@ const Search = ({ router, repos }) => {
                   key={index}
                   style={selected ? selectedItemStyle : null}
                 >
-                  <FilterLink
-                    {...queryParams}
-                    sort={item.value}
-                    order={item.order}
-                    name={item.name}
-                  />
+                  {selected ? (
+                    <span>{item.name}</span>
+                  ) : (
+                    <FilterLink
+                      {...queryParams}
+                      sort={item.value}
+                      order={item.order}
+                      name={item.name}
+                    />
+                  )}
                 </List.Item>
               );
             }}
