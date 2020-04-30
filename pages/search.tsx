@@ -138,7 +138,7 @@ const Search = ({ router, repos }) => {
             <Pagination
               pageSize={PER_PAGE}
               current={Number(page) || 1}
-              total={repos.total_count}
+              total={1000}
               onChange={noop}
               itemRender={(page, type, ol) => {
                 const p =
