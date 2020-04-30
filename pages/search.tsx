@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Row, Col, List } from 'antd';
 import Router, { withRouter } from 'next/router';
 import Link from 'next/link';
@@ -37,32 +37,32 @@ const selectedItemStyle = {
   fontWeight: 100,
 };
 
-const Search = ({ router, repos }) => {
-  console.log(repos);
-  const { lang, sort, order, q } = router.query;
+const handleSearch = (config) => {
+  Router.push({
+    pathname: '/search',
+    query: config,
+  });
+};
 
-  const handleLanguageChange = (language) => {
-    Router.push({
-      pathname: '/search',
-      query: {
-        q,
-        lang: language,
-        order,
-        sort,
-      },
-    });
-  };
-  const handleSortChange = (sort) => {
+const FilterLink = ({ name, q, lang, sort, order }) => {
+  const handleSearch = (config) => {
     Router.push({
       pathname: '/search',
       query: {
         q,
         lang,
-        sort: sort.value,
-        order: sort.order,
+        sort,
+        order,
       },
     });
   };
+  return <a onClick={handleSearch}>{name}</a>;
+};
+
+const Search = ({ router, repos }) => {
+  console.log(repos);
+  const { ...queryParams } = router.query;
+  const { lang, sort, order } = router.query;
 
   return (
     <div className='search-wrapper'>
@@ -79,7 +79,7 @@ const Search = ({ router, repos }) => {
                   key={index}
                   style={selected ? selectedItemStyle : null}
                 >
-                  <a onClick={() => handleLanguageChange(item)}>{item}</a>
+                  <FilterLink {...queryParams} lang={item} name={item} />
                 </List.Item>
               );
             }}
@@ -102,7 +102,12 @@ const Search = ({ router, repos }) => {
                   key={index}
                   style={selected ? selectedItemStyle : null}
                 >
-                  <a onClick={() => handleSortChange(item)}>{item.name}</a>
+                  <FilterLink
+                    {...queryParams}
+                    sort={item.value}
+                    order={item.order}
+                    name={item.name}
+                  />
                 </List.Item>
               );
             }}
