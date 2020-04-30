@@ -1,7 +1,9 @@
-import React, { useCallback } from 'react';
-import { Row, Col, List } from 'antd';
+import React, { useCallback, isValidElement } from 'react';
+import { Row, Col, List, Pagination } from 'antd';
 import Router, { withRouter } from 'next/router';
 import Link from 'next/link';
+
+import Repo from '../components/Repo';
 
 const { request } = require('../libs/request');
 
@@ -32,12 +34,16 @@ const SORT_TYPES = [
   },
 ];
 
+const PER_PAGE = 20;
+
 const selectedItemStyle = {
   borderLeft: '2px solid red',
   fontWeight: 100,
 };
 
-const FilterLink = ({ name, q, lang, sort, order }) => {
+const noop = () => {};
+
+const FilterLink = ({ name, q, lang, sort, order, page }) => {
   let queryString = `?q=${q}`;
 
   if (lang) {
@@ -48,22 +54,23 @@ const FilterLink = ({ name, q, lang, sort, order }) => {
     queryString += `&sort=${sort}&order=${order || 'desc'}`;
   }
 
-  // if (page) {
-  //   queryString += `&page=${page}`;
-  // }
+  if (page) {
+    queryString += `&page=${page}`;
+  }
+
+  queryString += `&per_page=${PER_PAGE}`;
   console.log(queryString);
 
   return (
     <Link href={`/search${queryString}`}>
-      <a>{name}</a>
+      {isValidElement(name) ? name : <a>{name}</a>}
     </Link>
   );
 };
 
 const Search = ({ router, repos }) => {
-  console.log(repos);
   const { ...queryParams } = router.query;
-  const { lang, sort, order } = router.query;
+  const { lang, sort, order, page } = router.query;
 
   return (
     <div className='search-wrapper'>
@@ -122,6 +129,31 @@ const Search = ({ router, repos }) => {
             }}
           />
         </Col>
+        <Col span={18}>
+          <h3 className='repo-title'>{repos.total_count} repos</h3>
+          {repos.items.map((repo) => (
+            <Repo repo={repo} key={repo.id} />
+          ))}
+          <div className='pagination'>
+            <Pagination
+              pageSize={PER_PAGE}
+              current={Number(page) || 1}
+              total={repos.total_count}
+              onChange={noop}
+              itemRender={(page, type, ol) => {
+                const p =
+                  type === 'page'
+                    ? page
+                    : type === 'prev'
+                    ? page - 1
+                    : page + 1;
+                const name = type === 'page' ? page : ol;
+
+                return <FilterLink {...queryParams} page={p} name={name} />;
+              }}
+            />
+          </div>
+        </Col>
       </Row>
     </div>
   );
@@ -153,6 +185,8 @@ Search.getInitialProps = async ({ ctx }) => {
   if (page) {
     queryString += `&page=${page}`;
   }
+
+  queryString += `&per_page=${PER_PAGE}`;
 
   const result = await request(
     {
