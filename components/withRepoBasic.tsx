@@ -15,8 +15,8 @@ const makeQuery = (queryObj) => {
   return `?${query}`;
 };
 
-export default (Comp) => {
-  const WithDetail = ({ repoBasic, router }) => {
+export default (Comp, type = 'index') => {
+  const WithDetail = ({ repoBasic, router, ...rest }) => {
     const query = makeQuery(router.query);
     console.log(repoBasic);
     return (
@@ -36,22 +36,31 @@ export default (Comp) => {
         <div className='repo-basic'>
           <Repo repo={repoBasic} />
           <div className='tabs'>
-            <Link href={`/detail${query}`}>
-              <a className='tab index'>Readme</a>
-            </Link>
-            <Link href='/detail/issues'>
-              <a className='tab issues'>Issues</a>
-            </Link>
+            {type === 'index' ? (
+              <span className='tab'>Readme</span>
+            ) : (
+              <Link href={`/detail/index${query}`}>
+                <a className='tab index'>Readme</a>
+              </Link>
+            )}
+            {type === 'issues' ? (
+              <span className='tab'>Issues</span>
+            ) : (
+              <Link href='/detail/issues'>
+                <a className='tab issues'>Issues</a>
+              </Link>
+            )}
           </div>
         </div>
         <div>
-          <Comp />
+          <Comp {...rest} />
         </div>
       </div>
     );
   };
 
-  WithDetail.getInitialProps = async ({ router, ctx }) => {
+  WithDetail.getInitialProps = async (context) => {
+    const { router, ctx } = context;
     const { owner, name } = ctx.query;
     const repoBasic = await request(
       {
@@ -61,8 +70,15 @@ export default (Comp) => {
       ctx.res
     );
 
+    let pageData = {};
+
+    if (Comp.getInitialProps) {
+      pageData = await Comp.getInitialProps(context);
+    }
+
     return {
       repoBasic: repoBasic.data,
+      ...pageData,
     };
   };
 
