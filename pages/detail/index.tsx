@@ -1,15 +1,9 @@
-import MarkdownIt from 'markdown-it';
-
 import WithRepoBasic from '../../components/withRepoBasic';
+import MarkdownRender from '../../components/MarkdownRender';
 import { request } from '../../libs/request';
 
-const md = new MarkdownIt();
-
 const Detail = ({ readme }) => {
-  const content = atob(readme.content);
-  const html = md.render(content);
-
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+  return <MarkdownRender content={readme.content} isBase64 />;
 };
 
 Detail.getInitialProps = async ({

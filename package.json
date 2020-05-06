@@ -31,6 +31,7 @@
     "axios": "^0.19.2",
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
+    "github-markdown-css": "^4.0.0",
     "ioredis": "^4.16.2",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
