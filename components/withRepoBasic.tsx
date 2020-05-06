@@ -56,7 +56,7 @@ export default (Comp, type = 'index') => {
             {type === 'issues' ? (
               <span className='tab'>Issues</span>
             ) : (
-              <Link href='/detail/issues'>
+              <Link href={`/detail/issues${query}`}>
                 <a className='tab issues'>Issues</a>
               </Link>
             )}
