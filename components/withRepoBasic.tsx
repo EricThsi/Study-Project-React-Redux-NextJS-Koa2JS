@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 
 import { request } from '../libs/request';
+import { set, get } from '../libs/repoBasicCache';
 import Repo from './Repo';
 
 const makeQuery = (queryObj) => {
@@ -15,10 +16,19 @@ const makeQuery = (queryObj) => {
   return `?${query}`;
 };
 
+const isServer = typeof window === 'undefined';
+
 export default (Comp, type = 'index') => {
   const WithDetail = ({ repoBasic, router, ...rest }) => {
     const query = makeQuery(router.query);
     console.log(repoBasic);
+
+    useEffect(() => {
+      if (!isServer) {
+        set(repoBasic);
+      }
+    }, []);
+
     return (
       <div className='repo'>
         <style jsx>{`
@@ -62,6 +72,21 @@ export default (Comp, type = 'index') => {
   WithDetail.getInitialProps = async (context) => {
     const { router, ctx } = context;
     const { owner, name } = ctx.query;
+    const full_name = `${owner}/${name}`;
+
+    let pageData = {};
+
+    if (Comp.getInitialProps) {
+      pageData = await Comp.getInitialProps(context);
+    }
+
+    if (get(full_name)) {
+      return {
+        repoBasic: get(full_name),
+        ...pageData,
+      };
+    }
+
     const repoBasic = await request(
       {
         url: `/repos/${owner}/${name}`,
@@ -69,12 +94,6 @@ export default (Comp, type = 'index') => {
       ctx.req,
       ctx.res
     );
-
-    let pageData = {};
-
-    if (Comp.getInitialProps) {
-      pageData = await Comp.getInitialProps(context);
-    }
 
     return {
       repoBasic: repoBasic.data,

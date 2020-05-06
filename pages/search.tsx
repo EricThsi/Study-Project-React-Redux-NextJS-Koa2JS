@@ -1,4 +1,4 @@
-import React, { useCallback, isValidElement } from 'react';
+import React, { useCallback, useEffect, isValidElement } from 'react';
 import { Row, Col, List, Pagination } from 'antd';
 import Router, { withRouter } from 'next/router';
 import Link from 'next/link';
@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Repo from '../components/Repo';
 
 const { request } = require('../libs/request');
+import { cacheArray, get } from '../libs/repoBasicCache';
 
 const LANGUAGES = ['JavaScript', 'HTML', 'CSS', 'React'];
 const SORT_TYPES = [
@@ -68,9 +69,17 @@ const FilterLink = ({ name, q, lang, sort, order, page }) => {
   );
 };
 
+const isServer = typeof window === 'undefined';
+
 const Search = ({ router, repos }) => {
   const { ...queryParams } = router.query;
   const { lang, sort, order, page } = router.query;
+
+  useEffect(() => {
+    if (!isServer) {
+      cacheArray(repos.items);
+    }
+  }, []);
 
   return (
     <div className='search-wrapper'>
