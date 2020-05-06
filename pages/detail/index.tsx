@@ -1,6 +1,9 @@
+import dynamic from 'next/dynamic';
+
 import WithRepoBasic from '../../components/withRepoBasic';
-import MarkdownRender from '../../components/MarkdownRender';
 import { request } from '../../libs/request';
+
+const MarkdownRender = dynamic(() => import('../../components/MarkdownRender'));
 
 const Detail = ({ readme }) => {
   return <MarkdownRender content={readme.content} isBase64 />;
