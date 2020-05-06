@@ -5,6 +5,7 @@ const next = require('next');
 const dotenv = require('dotenv');
 const session = require('koa-session');
 const Redis = require('ioredis');
+const atob = require('atob');
 
 dotenv.config();
 
@@ -20,6 +21,9 @@ const app = next({
 // redis client, use default config
 const redis = new Redis();
 const handle = app.getRequestHandler();
+
+// set global method
+global.atob = atob;
 
 app.prepare().then(() => {
   const server = new Koa();
